@@ -29,14 +29,11 @@ const user3 = {
 };
 
 const createUser = async ({ email, password }, cb) => {
-  const salt = bcrypt.genSaltSync(10);
-  const hash = bcrypt.hashSync(password, salt);
 
   const newUser = await new UserModel(
     {
       email,
-      password: hash,
-      creationTimestamp: new Date().getTime(),
+      password,
     }
   )
 
