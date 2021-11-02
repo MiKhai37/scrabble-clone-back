@@ -4,6 +4,7 @@ const express = require('express');
 const path = require('path');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser')
+const cors = require('cors');
 
 const mongoose = require('mongoose');
 const passport = require('passport');
@@ -21,9 +22,9 @@ const protectedRoute = require('./routes/protected-routes');
 const app = express();
 const port = process.env.PORT || 5000;
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'pug');
+app.use(cors({
+  origin: ['http://localhost:3000/', 'https://scrabble-clone-front.vercel.app/']
+}));
 
 app.use(logger('dev'));
 app.use(cookieParser())
