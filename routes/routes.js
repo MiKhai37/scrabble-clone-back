@@ -4,52 +4,55 @@ const jwt = require('jsonwebtoken');
 
 const router = express.Router();
 
-// POST route for signup middleware define in ../auth/auth.js
+// POST route for signup middleware define in ../auth/passport.js
 router.post(
   '/signup',
   passport.authenticate('signup', { session: false }),
   async (req, res, next) => {
-    res.json({
-      message: 'Signup successful',
-      user: req.user
-    });
+    res.json({ message: 'Signup successful' });
   }
 );
 
-// POST route for login middleware define in ../auth/auth.js
+// POST route for login middleware define in ../auth/passport.js
 router.post(
   '/login',
   async (req, res, next) => {
     passport.authenticate(
       'login',
-      async (err, user, info) => {
-        try {
-          if (err || !user) {
-            const error = new Error('An error occurred.');
+      async (err, user) => {
 
-            return next(error);
-          }
-
-          req.login(
-            user,
-            { session: false }, // No session, user is expected to send the token on each request
-            async (error) => {  // Not top performance for web apps, but useful for API
-              if (error) return next(error);
-
-              const body = { _id: user._id, email: user.email };
-              const token = jwt.sign({ user: body }, process.env.JWT_SECRET);
-
-              res.cookie('secret_token', token, { httpOnly: true });
-
-              return res.json({ token });
-            }
-          );
-        } catch (error) {
-          return next(error);
+        if (err || !user) {
+          return next(err);
         }
+
+        const jwtPayload = {
+          _id: user._id,
+          email: user.email,
+          expiration: Date.now() + parseInt(process.env.JWT_EXPIRATION_TIME),
+        };
+
+        const token = jwt.sign(JSON.stringify(jwtPayload), process.env.JWT_SECRET);
+
+        return res
+          .cookie("secret_token", token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+          })
+          .status(200)
+          .json({ message: "Logged in successfully 😊 👌" });
+
       }
     )(req, res, next);
   }
 );
+
+router.get('/protected',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    res.send(200).json({
+      message: 'welcome to the protected route!'
+    })
+  }
+)
 
 module.exports = router;

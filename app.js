@@ -3,11 +3,12 @@ const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
 const logger = require('morgan');
+const cookieParser = require('cookie-parser')
 
 const mongoose = require('mongoose');
 const passport = require('passport');
 
-require('./auth/auth');
+require('./auth/passport');
 
 //DB Connection
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true, });
@@ -15,15 +16,17 @@ const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 const routes = require('./routes/routes');
-const secureRoute = require('./routes/protected-routes');
+const protectedRoute = require('./routes/protected-routes');
 
 const app = express();
+const port = process.env.PORT || 5000;
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
 app.use(logger('dev'));
+app.use(cookieParser())
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -33,7 +36,7 @@ app.use(passport.initialize());
 app.use('/', routes);
 
 // Add the jwt strategy as a middleware, only authenticated user can access
-app.use('/user', passport.authenticate('jwt', { session: false }), secureRoute);
+app.use('/user', passport.authenticate('jwt', { session: false }), protectedRoute);
 
 
 // catch 404 and forward to error handler
@@ -44,11 +47,11 @@ app.use(function(req, res, next) {
 // error handler
 app.use(function(err, req, res, next) {
   res.status(err.status || 500);
-  res.send(err);
+  res.json(err.message);
 });
 
-app.listen(process.env.PORT || 5000, () =>
-  console.log(`listening on port ${process.env.PORT || 5000}!`),
-);
+app.listen(port, () => {
+  console.log(`Server is up at port:${port}`)
+})
 
 module.exports = app;
