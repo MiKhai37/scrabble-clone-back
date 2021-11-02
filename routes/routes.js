@@ -39,6 +39,8 @@ router.post(
               const body = { _id: user._id, email: user.email };
               const token = jwt.sign({ user: body }, process.env.JWT_SECRET);
 
+              res.cookie('secret_token', token, { httpOnly: true });
+
               return res.json({ token });
             }
           );
