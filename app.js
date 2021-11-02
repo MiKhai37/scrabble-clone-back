@@ -23,7 +23,7 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 app.use(cors({
-  origin: ['http://localhost:3000/', 'https://scrabble-clone-front.vercel.app/']
+  origin: ['http://localhost:3000', 'https://scrabble-clone-front.vercel.app']
 }));
 
 app.use(logger('dev'));
