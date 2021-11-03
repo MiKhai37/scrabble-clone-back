@@ -28,8 +28,8 @@ Online scrabble (1-4 players) (backend repo)
 - Heroku
   - Backend Deployment
 - Vercel
-  -Frontend Deployment
+  - Frontend Deployment
 - Insomnia/PostMan
-  -API Platform for building/testing API
+  - API Platform for building/testing API
 - Cypress
-  Javascript E2E testing framework
+  - Javascript E2E testing framework
