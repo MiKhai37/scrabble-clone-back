@@ -8,7 +8,7 @@ describe('The Signup Page', () => {
   beforeEach(() => {
     // Logout
 
-    // Go to login page
+    // Go to signup page
     cy.visit('/signup')
   })
 

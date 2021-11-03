@@ -40,7 +40,7 @@ app.use('/', routes)
 app.use('/auth', authRoutes);
 
 // Add the jwt strategy as a middleware, only authenticated user can access
-app.use('/user', passport.authenticate('jwt', { session: false }), protectedRoute);
+app.use('/protected', passport.authenticate('jwt', { session: false }), protectedRoute);
 
 
 // catch 404 and forward to error handler
