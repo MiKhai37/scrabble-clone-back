@@ -16,7 +16,7 @@ mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTop
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
-const routes = require('./routes/routes');
+const authRoutes = require('./routes/authRoutes');
 const protectedRoute = require('./routes/protected-routes');
 
 const app = express();
@@ -34,7 +34,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(passport.initialize());
 
-app.use('/', routes);
+app.use('/auth', authRoutes);
 
 // Add the jwt strategy as a middleware, only authenticated user can access
 app.use('/user', passport.authenticate('jwt', { session: false }), protectedRoute);
