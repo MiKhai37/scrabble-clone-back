@@ -12,7 +12,7 @@ describe('The Login Page', () => {
     cy.visit('/login')
   })
 
-  it('Successful login', () => {
+  it('Successful Login', () => {
     const email = 'user1@like.com';
     const password = 'pass1';
 
@@ -28,7 +28,7 @@ describe('The Login Page', () => {
     // cy.getCookie('secret_token').should('exist');
   })
 
-  it('Wrong password login', () => {
+  it('Wrong password', () => {
     const email = 'user1@like.com';
     const password = 'pass2';
 
@@ -46,7 +46,7 @@ describe('The Login Page', () => {
     // cy.getCookie('secret_token').should('not.exist');
   })
 
-  it('Wrong email login', () => {
+  it('Wrong email', () => {
     const email = 'user@like.com';
     const password = 'pass1';
 

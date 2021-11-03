@@ -5,7 +5,7 @@ const async = require('async');
 const bcrypt = require('bcrypt');
 const mongoose = require('mongoose');
 
-const UserModel = require('./models/user');
+const UserModel = require('../models/user');
 
 const MONGODB_URI = process.env.MONGODB_URI;
 mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
@@ -33,7 +33,7 @@ const createUser = async ({ email, password }, cb) => {
   const newUser = await new UserModel(
     {
       email,
-      password,
+      password, // the password will be hashed while saving
     }
   )
 

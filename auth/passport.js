@@ -55,7 +55,7 @@ passport.use(
         return done(err, null)
       }
 
-      return done(null, user, { message: 'Logged in Successfully' });
+      return done(null, user, { message: 'Logged in Successfully', user });
 
     }
   )
