@@ -39,7 +39,7 @@ router.post(
             secure: process.env.NODE_ENV === "production",
           })
           .status(200)
-          .json({ message: "Logged in successfully 😊 👌" });
+          .json({ message: "Logged in successfully 😊 👌", user });
 
       }
     )(req, res, next);
