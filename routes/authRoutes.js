@@ -1,3 +1,5 @@
+// Routes for authentication
+
 const express = require('express');
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
@@ -9,7 +11,7 @@ router.post(
   '/signup',
   passport.authenticate('signup', { session: false }),
   async (req, res, next) => {
-    res.json({ message: 'Signup successful' });
+    res.json({ message: 'Signup successful, you can login' });
   }
 );
 

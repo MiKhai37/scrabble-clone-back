@@ -5,9 +5,12 @@ const path = require('path');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser')
 const cors = require('cors');
+const session = require('express-session')
 
 const mongoose = require('mongoose');
 const passport = require('passport');
+
+const User = require('./models/user')
 
 require('./auth/passport');
 
@@ -18,7 +21,6 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 const routes = require('./routes/routes');
 const authRoutes = require('./routes/authRoutes');
-const protectedRoute = require('./routes/protected-routes');
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -33,15 +35,31 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
+passport.serializeUser(function (user, done) {
+  done(null, user._id);
+});
+
+passport.deserializeUser(function (user, done) {
+  //If using Mongoose with MongoDB; if other you will need JS specific to that schema.
+  User.findById(user._id, function (err, user) {
+      done(err, user);
+  });
+});
+
+const oneDay = 1000 * 60 * 60 * 24;
+app.use(session({
+  secret: 'keyboard cat',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: true, maxAge: oneDay}
+}))
+
 app.use(passport.initialize());
+app.use(passport.session());
 
 app.use('/', routes)
 
 app.use('/auth', authRoutes);
-
-// Add the jwt strategy as a middleware, only authenticated user can access
-app.use('/protected', passport.authenticate('jwt', { session: false }), protectedRoute);
-
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

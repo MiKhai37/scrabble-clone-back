@@ -22,7 +22,7 @@ passport.use(
 
       User.create({ email, password }, (err, user) => {
         if (err) return done(err, null);
-        return done(null, user, { message: 'Sign up Successfully' });
+        return done(null, user);
       });
 
     }
@@ -55,7 +55,7 @@ passport.use(
         return done(err, null)
       }
 
-      return done(null, user, { message: 'Logged in Successfully', user });
+      return done(null, user);
 
     }
   )
