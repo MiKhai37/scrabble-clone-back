@@ -57,4 +57,9 @@ router.get('/protected',
   }
 )
 
+router.get('/logout', (req,res) => {
+  req.logout();
+  res.end();
+})
+
 module.exports = router;
