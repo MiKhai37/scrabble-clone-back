@@ -7,13 +7,14 @@ describe('The Login Page', () => {
 
   beforeEach(() => {
     // Logout
-
+    cy.request('http://localhost:5000/auth/logout')
     // Go to login page
     cy.visit('/login')
   })
 
   it('Successful Login', () => {
     const email = 'user1@like.com';
+    const username = 'user1';
     const password = 'pass1';
 
     cy.get('input[id=basic_email]').type(email);
@@ -22,7 +23,9 @@ describe('The Login Page', () => {
 
     cy.get('button[type=submit]').click();
 
-    cy.url().should('include', '/profile');
+    cy.url().should('include', '/dashboard');
+
+    cy.contains(username)
 
     // Watch for session cookie
     // cy.getCookie('secret_token').should('exist');
