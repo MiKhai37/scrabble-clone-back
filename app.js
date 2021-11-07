@@ -5,7 +5,10 @@ const path = require('path');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser')
 const cors = require('cors');
-const session = require('express-session')
+const session = require('express-session');
+
+const http = require('http');
+const socketIo = require('socket.io');
 
 const mongoose = require('mongoose');
 const passport = require('passport');
@@ -25,9 +28,12 @@ const authRoutes = require('./routes/authRoutes');
 const app = express();
 const port = process.env.PORT || 5000;
 
+const frontUrls = ['http://localhost:3000', process.env.FRONTEND_URL, process.env.FRONTEND_DEV_URL]
+
 app.use(cors({
-  origin: ['http://localhost:3000', process.env.FRONTEND_URL, process.env.FRONTEND_DEV_URL]
+  origin: frontUrls,
 }));
+
 
 app.use(logger('dev'));
 app.use(cookieParser())
@@ -43,7 +49,7 @@ passport.deserializeUser(function (user, done) {
   //If using Mongoose with MongoDB; if other you will need JS specific to that schema.
   User.findById(user._id, function (err, user) {
       done(err, user);
-  });
+    });
 });
 
 const oneDay = 1000 * 60 * 60 * 24;
@@ -72,8 +78,41 @@ app.use(function(err, req, res, next) {
   res.json(err.message);
 });
 
-app.listen(port, () => {
+////////////////////////////////////////
+const server = http.createServer(app);
+
+const io = socketIo(server, {
+  cors: {
+    origin: frontUrls,
+    methods: ["GET", "POST"]
+  }
+});
+
+let interval
+
+io.on('connection', (socket) => {
+  console.log('New client connected');
+  console.log('Socket ID: ', socket.id)
+  if (interval) {
+    clearInterval(interval);
+  };
+  interval = setInterval(() => getApiAndEmit(socket), 1000);
+  socket.on('disconnect', () => {
+    console.log('Client disconnected');
+    clearInterval(interval);
+  });
+});
+
+
+const getApiAndEmit = (socket => {
+  const response = new Date();
+  socket.emit('FromAPI', response);
+})
+
+/////////////////////////////////////////
+
+server.listen(port, () => {
   console.log(`Server is up at port:${port}`)
 })
 
-module.exports = app;
+module.exports = server;

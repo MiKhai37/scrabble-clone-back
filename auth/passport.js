@@ -66,7 +66,7 @@ const cookieExtractor = req => {
 
   if (req && req.cookies) {
     jwt = req.cookies['secret_token']
-    console.log(req.cookies)
+    //console.log(req.cookies)
   }
 
   return jwt
@@ -83,7 +83,7 @@ passport.use(
     (jwtPayload, done) => {
       const { expiration } = jwtPayload;
 
-      console.log('jwt', jwtPayload)
+      //console.log('jwt', jwtPayload)
       if (Date.now() > expiration) {
         const err = new Error('Unauthorized, jwt expired');
         err.status = 401;
