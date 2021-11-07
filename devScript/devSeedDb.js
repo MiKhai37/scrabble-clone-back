@@ -15,24 +15,28 @@ console.log('Database connection opened');
 
 const user1 = {
   email: 'user1@like.com',
+  username: 'user1',
   password: 'pass1',
 };
 
 const user2 = {
   email: 'user2@like.com',
+  username: 'user2',
   password: 'pass2',
 };
 
 const user3 = {
   email: 'user3@like.com',
+  username: 'user3',
   password: 'pass3',
 };
 
-const createUser = async ({ email, password }, cb) => {
+const createUser = async ({ email, username, password }, cb) => {
 
   const newUser = await new UserModel(
     {
       email,
+      username,
       password, // the password will be hashed while saving
     }
   )

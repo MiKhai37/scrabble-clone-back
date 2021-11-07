@@ -1,1 +1,0 @@
-// Routes protected by JWT, no session, only JWT in the request

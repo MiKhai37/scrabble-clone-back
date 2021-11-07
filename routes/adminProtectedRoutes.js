@@ -1,1 +1,0 @@
-// Admin routes only user with admin role can use it

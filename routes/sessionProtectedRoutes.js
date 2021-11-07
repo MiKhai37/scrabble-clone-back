@@ -1,1 +1,0 @@
-// Routes protected by sessions, no JWT in every request needed

@@ -40,8 +40,8 @@ router.post(
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
           })
-          .status(200)
-          .json({ message: "Logged in successfully 😊 👌", user });
+          .status(201)
+          .json({ message: "Logged in successfully 😊 👌", jwtPayload, token });
 
       }
     )(req, res, next);

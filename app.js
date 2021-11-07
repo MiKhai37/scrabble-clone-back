@@ -69,6 +69,7 @@ app.use('/auth', authRoutes);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
+  console.log('ahhh')
   next(createError(404));
 });
 
@@ -102,7 +103,6 @@ io.on('connection', (socket) => {
     clearInterval(interval);
   });
 });
-
 
 const getApiAndEmit = (socket => {
   const response = new Date();
