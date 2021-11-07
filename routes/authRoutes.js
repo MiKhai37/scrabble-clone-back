@@ -11,7 +11,7 @@ router.post(
   '/signup',
   passport.authenticate('signup', { session: false }),
   async (req, res, next) => {
-    res.json({ message: 'Signup successful, you can login' });
+    res.status(201).json({ message: 'Signup successful, you can login' });
   }
 );
 
@@ -29,6 +29,7 @@ router.post(
 
         const jwtPayload = {
           _id: user._id,
+          username: user.username,
           email: user.email,
           expiration: Date.now() + parseInt(process.env.JWT_EXPIRATION_TIME),
         };
@@ -40,7 +41,7 @@ router.post(
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
           })
-          .status(201)
+          .status(200)
           .json({ message: "Logged in successfully 😊 👌", jwtPayload, token });
 
       }
@@ -48,6 +49,8 @@ router.post(
   }
 );
 
+
+// GET Route to test the authentication by JWT
 router.get('/protected',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
@@ -57,6 +60,7 @@ router.get('/protected',
   }
 )
 
+// GET Route to logout
 router.get('/logout', (req,res) => {
   req.logout();
   res.end();

@@ -9,9 +9,10 @@ passport.use(
   new localStrategy(
     {
       usernameField: 'email',
-      passwordField: 'password'
+      passwordField: 'password',
+      passReqToCallback : true
     },
-    async (email, password, done) => {
+    async (req, email, password, done) => {
 
 
       if (await User.findOne({ email })) {
@@ -20,7 +21,7 @@ passport.use(
         return done(err, null)
       }
 
-      User.create({ email, password }, (err, user) => {
+      User.create({ email: req.body.email, username: req.body.username, password: req.body.password }, (err, user) => {
         if (err) return done(err, null);
         return done(null, user);
       });
